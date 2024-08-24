@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+<body>
+    <div class="container">
+        <div class="top-menu">
+            <div>
+                <img src="images/logo.png" alt="lennin">
+            </div>
+            <div class="page">
+                <a href="index.html">Sản phẩm</a>
+                <a href="#">Sale</a>
+                <a href="#">Thư viện</a>
+                <a href="#">Giới thiệu</a>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <a href="cart.html">
+                    <i class="fa-solid fa-cart-shopping" id="cart_count"></i>
+                </a>
+                <a href="register.html" id="linkLogin">
+                    <i class="fa-solid fa-user" id="users"></i>
+                    
+                </a>
+                <button id="btnLogout" onclick="onclickLogout()"></button>
+                <div class="lines"></div>
+                <i class="fa-solid fa-globe"></i>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="selector">
+                <a href="#" id="highlight">Deck</a>
+                <a href="#">Accessories</a>
+                <a href="#">Clothing</a>
+                <a href="#">S/S 2022</a>
+                <a href="#">S/S 2021</a>
+                <a href="#">S/S 2020</a>
+                <a href="#">S/S 2019</a>
+                <a href="#">Tất cả</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="theader">Mã user</th>
+                        <th class="theader">Mã SP</th>
+                        <th class="theader">Tên</th>
+                        <th class="theader">Giá</th>
+                        <th class="theader">Số lượng</th>
+                        <th class="theader"></th>
+                    </tr>
+                </thead>
+                <tbody id="tablebody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        update_noti_cart();
+        let userID = 0;
+        let giohang = localStorage.getItem("giohang")
+            ? JSON.parse(localStorage.getItem("giohang"))
+            : [];
+        let cur = localStorage.getItem("currentUser")
+            ? JSON.parse(localStorage.getItem("currentUser"))
+            : [];
+        if (cur.length >0){
+            let userIdCheck = cur[0].id
+                ? cur[0].id
+                : 0;
+            userID = userIdCheck;
+        }    
+
+
+        for (let product of products) { // Lặp trong products (DATA)
+            for (let sanpham of giohang) { // Lặp trong giỏ hàng
+                if (sanpham.id == product.id && sanpham.userID == userID) { // ID sản phẩm trong giỏ hàng bằng ID sản phẩm trong DATA
+                    let cart_item = `
+                             <tr>
+                                <td>${sanpham.userID}</td>
+                                <td>${sanpham.id}</td>
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td><button onclick="update_cart(${sanpham.userID},${sanpham.id},-1)">-</button> ${sanpham.quantity} <button onclick="update_cart(${sanpham.userID},${sanpham.id},1)">+</button></td>
+                                <td><button onclick="delete_cart(${sanpham.userID},${sanpham.id})">Xoá</button></td>
+                            </tr> `
+                    document.getElementById("tablebody").innerHTML += cart_item;
+                }
+            }
+        }
+        function delete_cart(userID, productID) { // Function xoá sản phẩm trong giỏ hàng
+            let cart = localStorage.getItem("giohang") //khai báo biến, nếu đã có localStorage thì trả về mảng "giohang" sau khi được ép kiểu json
+                ? JSON.parse(localStorage.getItem("giohang"))
+                : [];// Nếu k có localStorage thì trả về mảng rỗng
+            let existingItem = cart.find((i) =>  i.userID == userID && i.id == productID); // Kiểm gia object có ID giống productID trong mảng "giohang"
+            if (existingItem) { //Nếu có object vừa tìm thì thực hiện:
+                cart1 = cart.filter((item) => item.userID == userID && item.id == productID);
+                cart = cart.filter((item1) => !cart1.includes(item1));               
+            }   
+            
+
+            localStorage.setItem("giohang", JSON.stringify(cart)); // Lưu lại "giohang" trong localStorage
+            update_noti_cart();
+            location.reload(); //Reload lại trang để update dữ liệu
+
+        }                      //24      //+1
+        function update_cart(userID, productID, value) { // Cập nhật số lượng của phần tử có mã là ID với số lượng value
+            let cart = localStorage.getItem("giohang")
+                ? JSON.parse(localStorage.getItem("giohang"))
+                : [];
+            let existingItem = cart.find((item) => item.id == productID && item.userID == userID); // khai báo biến "phần tử tồn tại" 
+            if (existingItem) {
+                if (existingItem.quantity == 1 && value == -1) { // Nếu phần tử đang tìm có số lượng 1 và ta muốn giảm 1 phần tử => phần tử sẽ về 0, k tồn tại
+                    cart1 = cart.filter((item) => item.userID == userID && item.id == productID);
+                    cart = cart.filter((item1) => !cart1.includes(item1));   // Xây dựng giỏ hàng mới với các phần tử mới, khác mã phần tử vừa bỏ đi
+                } else {
+                    existingItem.quantity += value; //  nếu phần tử có số lượng khác 1 (từ 2 trở lên) thì cộng trừ thêm với số lượng mới
+                }
+            }
+            localStorage.setItem("giohang", JSON.stringify(cart));
+            update_noti_cart();
+            location.reload();
+        }
+    </script>
+    <script src="app.js"></script>
+    <script src="function.js" ></script>
+    <script src="cart.js" ></script>
+</body>
+</html>

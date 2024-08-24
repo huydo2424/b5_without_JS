@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="function.js"></script>
+    <script src="app.js"></script>
+    <title></title>
+</head>
+<body>
+    <div class="container">
+        <div class="top-menu">
+            <div>
+                <img src="images/logo.png" alt="lennin">
+            </div>
+            <div class="page">
+                <a href="index.html">Sản phẩm</a>
+                <a href="#">Sale</a>
+                <a href="#">Thư viện</a>
+                <a href="#">Giới thiệu</a>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <a href="cart.html">
+                    <i class="fa-solid fa-cart-shopping" id="cart_count"></i>
+                </a>
+                <a href="register.html">
+                    <i class="fa-solid fa-user" id="users"></i>
+                </a>
+                <div class="lines"></div>
+                <i class="fa-solid fa-globe"></i>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="selector">
+                <a href="#" id="highlight">Deck</a>
+                <a href="#">Accessories</a>
+                <a href="#">Clothing</a>
+                <a href="#">S/S 2022</a>
+                <a href="#">S/S 2021</a>
+                <a href="#">S/S 2020</a>
+                <a href="#">S/S 2019</a>
+                <a href="#">Tất cả</a>
+            </div>
+            <div class="form1" id="form_login">
+                <h1>Đăng nhập</h1>
+                <span class="sp1">Tài khoản:</span> <input id="name" required="" placeholder="Tài khoản" /> <br />
+                <span class="sp1">Mật khẩu:</span> <input id="pwd" required="" placeholder="Mật khẩu" /> <br />
+                <button onclick="login()">Đăng nhập</button>
+                <a></a>
+            </div>
+            <div class="form1" id="form_register">
+                <h1>Đăng ký</h1>
+                <span class="sp1">Tài khoản:</span> <input id="uname" required="" placeholder="Tài khoản" /> <br />
+                <span class="sp1">Mật khẩu:</span> <input id="mk" required="" placeholder="Mật khẩu" /> <br />
+                <span class="sp1">Nhập lại:</span> <input id="rmk" required="" placeholder="Nhập lại mật khẩu" /> <br />
+                <button onclick="check_Register()">Đăng ký</button>
+
+            </div>
+            <a id="change_form" onclick="change_form()"><span id="thongbao">Đăng ký</span></a>
+        </div>
+    </div>
+    <script>
+        function change_form() {
+            let register = document.getElementById("form_register");
+            let login = document.getElementById("form_login");
+            let tb = document.getElementById("thongbao");
+            if (tb.innerHTML == "Đăng ký") {
+                tb.innerHTML = "Đăng nhập";
+                login.style.display = "none"; // Ban đầu login có css là display: block;
+                register.style.display = "block"; //Ban đầu register có css là none, chuyển thành block
+            } else {
+                if (tb.innerHTML == "Đăng nhập") {
+                    tb.innerHTML = "Đăng ký";
+                    login.style.display = "block"; // Form đăng nhập hiển thị
+                    register.style.display = "none"; // Form đăng ký ẩn đi
+                }
+            }
+        }
+    </script>
+</body>
+</html>
